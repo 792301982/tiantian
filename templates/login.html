@@ -12,8 +12,9 @@
 
     <h1>登录</h1>
     电话：<input type="text" id="phone" />
+    <br />
     密码：<input type="password" id="pwd" />
-
+    <br />
     <input type="button" id="login" value="登录">
 
 
@@ -23,18 +24,17 @@
 
     $("#login").click(
         function () {
-            var phone=$("#phone").val();
-            var pwd=$("#pwd").val();
+            var phone = $("#phone").val();
+            var pwd = $("#pwd").val();
             $.ajax({
                 type: "post",
                 url: "/login",
                 data: {
-                    'phone':phone,
-                    'pwd':pwd
+                    'phone': phone,
+                    'pwd': pwd
                 },
                 success: function (result) {
-                    if(result=='success')
-                    {
+                    if (result == 'success') {
                         window.location.replace("/worker");
                     }
                     else alert("登录出错");

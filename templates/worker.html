@@ -13,14 +13,69 @@
     <h1>选择城市：</h1>
     <input type="radio" name="city" value="1"/>重庆和成都
     <input type="radio" name="city" value="2" />全国
+    <br/>
 
+    定时：<input type="time" id="time"/>
+    <br/>
+    定时启动开关：<input type="radio" name="time" value="1"/>开
+    <input type="radio" name="time" value="0" />关
+    <br/>
+    <input type="button" id="worker1" value="定时开始">
     <input type="button" id="worker" value="开始">
 
     <div id='return'></div>
+    <div id='return1'></div>
 
 </body>
 
 <script>
+    $.ajax({
+                type: "post",
+                url: "/get_status",
+                dataType : "json",
+                data: {
+
+                },
+                success: function (result) {
+                    var city;
+                    if(result[2]==1) city="重庆、成都"
+                    else if(result[2]==2) city="全国"
+                    var time=result[3];
+                    var flag;
+                    if(result[4]==1) flag="开启"
+                    else if(result[4]==0) flag="关闭"
+                    $("#return1").html("定时状态 "+city+time+flag);
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+
+    $("#worker1").click(
+        function () {
+            var time=$("#time").val();
+            var city=$("input[name='city']:checked").val();
+            var flag=$("input[name='time']:checked").val();
+            $.ajax({
+                type: "post",
+                url: "/worker1",
+                data: {
+                    'city':city,
+                    'time':time,
+                    'flag':flag
+                },
+                success: function (result) {
+                    alert(result); 
+                    location.reload();
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+    );
 
     $("#worker").click(
         function () {
@@ -45,8 +100,6 @@
             });
         }
     );
-
-
 
 </script>
 
