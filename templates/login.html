@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天天拍车自动出价</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <h1>登录</h1>
+    电话：<input type="text" id="phone" />
+    密码：<input type="password" id="pwd" />
+
+    <input type="button" id="login" value="登录">
+
+
+</body>
+
+<script>
+
+    $("#login").click(
+        function () {
+            var phone=$("#phone").val();
+            var pwd=$("#pwd").val();
+            $.ajax({
+                type: "post",
+                url: "/login",
+                data: {
+                    'phone':phone,
+                    'pwd':pwd
+                },
+                success: function (result) {
+                    if(result=='success')
+                    {
+                        window.location.replace("/worker");
+                    }
+                    else alert("登录出错");
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+    );
+
+
+
+</script>
+
+</html>

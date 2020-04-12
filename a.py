@@ -9,7 +9,8 @@ def Beijing_time():
     r=requests.get('https://www.baidu.com')
     t=time.strptime(r.headers['date'],'%a, %d %b %Y %H:%M:%S GMT')
     return time.mktime(t)+28800
-# if(Beijing_time()>1586494359.015696+86400):
+    
+# if(Beijing_time()>1586594738.8945582+86400):
 #     input("测试期已过，请联系作者。")
 #     sys.exit()
 
@@ -42,6 +43,9 @@ cars_url = "https://pai.ttpai.cn/"
 # orderUp: asc
 # orderBy:
 # currentPage: 1
+
+isbid_url="https://pai.ttpai.cn/bid/isbids"
+#GET
 
 js = '''
 function j() {
@@ -89,7 +93,6 @@ function j() {
 }
 '''
 
-
 def login(mobilePhone, pswd):
     guid = js2py.eval_js(js)
     cookies = dict()
@@ -100,6 +103,10 @@ def login(mobilePhone, pswd):
         'imageCode': ''
     })
     d = json.loads(r.text)
+
+    if d['code']!=200:
+        return 'error'
+    
     c = d['result'].split('|')
     cookies['tok'] = c[0]
     cookies['u'] = c[1]
@@ -108,6 +115,16 @@ def login(mobilePhone, pswd):
     # print(r2.text)
     # ud tok u m
     return cookies
+
+def get_isbids(cookies,auctionIds):
+    r=requests.get(isbid_url,headers=headers,cookies=cookies,params={'auctionIds':auctionIds})
+    d=json.loads(r.text)
+    l=list()
+    if d['result']==None:
+        return []
+    for i in d['result']:
+        l.append(str(i['auctionId']))
+    return l
 
 def get_auctionId(select_city,cookies):
     l=list()
@@ -132,12 +149,22 @@ def get_auctionId(select_city,cookies):
         cars=s.select(".pai-list .clearfix")
         if len(cars)==0:
             break
+        gujia_more3=list()
+        temp_l=list()
         for i in cars:
             spans=i.select("span")
-            if(spans[-7].text in ['骨架：5星','骨架：4星','骨架：3星'] and spans[-2].text=='\n出价\n'):
+            if(spans[-7].text in ['骨架：5星','骨架：4星','骨架：3星']):
                 auctionId=i.select(".controls")[0]['data-id']
-                l.append(auctionId)
-    return l
+                marketId=i.select(".controls")[0]['data-marketid']
+                gujia_more3.append((auctionId,marketId))
+                temp_l.append(auctionId)
+        
+        auctionIds=''
+        for i in gujia_more3:   
+            auctionIds+=i[1]+"_"+i[0]+','
+        bids=get_isbids(cookies,auctionIds)
+        l+=list(set(temp_l)-set(bids))
+    return list(set(l))
 
 def chujia(cookies,auctionId):
     r=requests.post(chujia_url,headers=headers,cookies=cookies,data={
@@ -147,13 +174,7 @@ def chujia(cookies,auctionId):
     d=json.loads(r.text)
     return d
 
-if __name__ =="__main__":
-    mobilePhone = input("输入用户名：")
-    pswd = input("输入密码：")
-    select_city=input("选择（1.重庆、成都 2.全国）：")
-
-    cookies=login(mobilePhone, pswd)
-    print("登录成功！")
+def worker(cookies,select_city):
     auctionIds=get_auctionId(select_city,cookies)
     print("获取id成功！")
     chenggong=0
@@ -163,19 +184,26 @@ if __name__ =="__main__":
         try:
             a=chujia(cookies,i)
             if(a['code']==200):
-                print("出价成功"+i)
+                print(a['message']+i)
                 chenggong+=1
-            elif(a['code']==500):
-                print("重复出价"+i)
-                chongfu+=1
             else:
-                print("出价失败"+i)
+                print(a['message']+i)
                 shibai+=1
         except:
             print("出价失败"+i)
             shibai+=1
-
     print("=============完成=============")
-    print("成功%d个 重复%d个 失败%d个"%(chenggong,chongfu,shibai))
+    print("成功%d个 失败%d个"%(chenggong,shibai))
+    return "成功%d个 失败%d个"%(chenggong,shibai)
+
+if __name__ =="__main__":
+    mobilePhone = input("输入用户名：")
+    pswd = input("输入密码：")
+    select_city=input("选择（1.重庆、成都 2.全国）：")
+
+    cookies=login(mobilePhone, pswd)
+    print("登录成功！")
+    worker(cookies,select_city)
+
     print("          按回车退出")
     input()

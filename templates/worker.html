@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>天天拍车自动出价</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+
+    <h1>选择城市：</h1>
+    <input type="radio" name="city" value="1"/>重庆和成都
+    <input type="radio" name="city" value="2" />全国
+
+    <input type="button" id="worker" value="开始">
+
+    <div id='return'></div>
+
+</body>
+
+<script>
+
+    $("#worker").click(
+        function () {
+            $(this).attr("disabled", "disabled");
+            $("#return").html("<h1 style='color:red;'>正在出价请稍等……</h1")
+            alert("正在出价请稍等……");
+            var city=$("input[name='city']:checked").val();
+            $.ajax({
+                type: "post",
+                url: "/worker",
+                data: {
+                    'city':city,
+                },
+                success: function (result) {
+                    $("#return").html("<h1 style='color:green;'>出价完成!</h1>"+result)
+                    alert(result); 
+                },
+                error: function (e) {
+                    console.log(e.status);
+                    console.log(e.responseText);
+                }
+            });
+        }
+    );
+
+
+
+</script>
+
+</html>
