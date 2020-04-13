@@ -230,7 +230,7 @@ if __name__ == "__main__":
 
     # print("          按回车退出")
     # input()
-    
+
     d = dict()
     while(1):
         with open("a.txt", "r+") as f:
@@ -243,6 +243,7 @@ if __name__ == "__main__":
 
         now_time = time.strftime("%H:%M", time.localtime())
         print("正在运行…… %s" % now_time)
+        time.sleep(10)
         for i in d:
             s = d[i].split(' ')
             if(s[4] == '1' and s[3] == now_time):
