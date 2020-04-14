@@ -133,8 +133,28 @@ def get_isbids(cookies, auctionIds):
     return l
 
 
-brands = ['比亚迪', '奔腾', '昌河', '长安轻型车', '长安跨越', '东风小康', '东风富康', '福汽启腾', '广汽吉奥', '哈飞', '华普', '海马', '华泰', '黄海', '吉利汽车', '江淮', '江铃', '开瑞', '力帆汽车', '莲花汽车', '奇瑞', '瑞麒',
-         '双龙', '双环',  '陕汽通家', '上汽大通',  '斯威汽车', '威麟',  '五十铃',   '潍柴英致', '潍柴汽车', '威马汽车', '新凯', '永源', '一汽', '野马汽车', '裕路', '云雀', '远程汽车',  '中华', '中兴', '众泰', '之诺', '知豆']
+brands = ['奥迪' ,'阿尔法罗密欧', '阿斯顿・马丁',
+'标致' ,'本田' ,'宝马' ,'北京', '奔驰' ,'布加迪', '别克' ,'宾利' ,'保时捷' ,'比亚迪', '奔腾' ,'宝骏', '巴博斯' ,'北汽威旺' ,'北汽制造' ,'北汽绅宝', '北汽幻速' ,'北汽新能源' ,'宝沃',
+'长安' ,'长城', '长安商用' , '长安轻型车' ,
+'大众' ,'东风' ,'道奇' ,'东南' ,'东风风神' ,'东风风行', 'DS', '东风风度', '东风风光',
+'丰田', '福特', '菲亚特', '法拉利', '福田',
+'广汽传祺', 'GMC' ,'观致',
+'悍马', '海马' ,'华泰' ,'红旗', '黄海', '海格' ,'哈弗' ,'汉腾汽车',
+'吉利汽车' ,'捷豹' ,'Jeep', '金杯' ,'江淮' ,'江铃' ,'金龙' ,'金旅' ,'捷途' ,'几何汽车',
+'克莱斯勒' ,'凯迪拉克' ,'科尼赛克', '凯翼' ,
+'雷诺', '兰博基尼' ,'路虎' ,'林肯', '雷克萨斯' ,'铃木' ,'劳斯莱斯', '猎豹汽车', '力帆汽车' ,'陆风', '莲花汽车',  '理念' ,'领克',
+'MG' ,'迈巴赫' ,'MINI' ,'玛莎拉蒂' ,'马自达',
+'纳智捷',
+'欧宝' ,'讴歌', '欧朗', '欧联' ,'欧拉', '欧尚汽车',
+'奇瑞', '起亚', '启辰',
+'荣威' ,'日产',
+'smart' , '斯巴鲁', '斯柯达','三菱', '双龙' ,'上汽大通' ,'思铭' ,'斯威汽车',
+'特斯拉',
+'沃尔沃', '五菱汽车' ,'五十铃' ,'WEY', '蔚来',
+'现代' ,'雪佛兰' ,'雪铁龙' ,'西雅特' ,'小鹏汽车' ,'鑫源' ,'星途' ,'新宝骏',
+'英菲尼迪' ,'野马汽车' ,'依维柯' ,'驭胜',
+'中华' ,'众泰'
+]
 
 
 def get_auctionId(select_city, cookies):
@@ -166,12 +186,14 @@ def get_auctionId(select_city, cookies):
             spans = i.select("span")
             brand= spans[0].text.split(' ')[0]
             year=spans[1].select('strong')[0].text.strip().split('年')[0]
-            if(spans[-7].text in ['骨架：5星', '骨架：4星', '骨架：3星'] and int(year) >2010 and (brand not in brands)):
-                auctionId = i.select(".controls")[0]['data-id']
-                marketId = i.select(".controls")[0]['data-marketid']
-                gujia_more3.append((auctionId, marketId))
-                temp_l.append(auctionId)
-                print(brand,year)
+
+            if(spans[-7].text in ['骨架：5星', '骨架：4星', '骨架：3星'] and (brand in brands)):
+                if( (brand in ['大众','马自达','日产'] and int(year) >=2008) or (brand in ['奥迪','本田','宝马','奔驰','丰田']) or int(year)>=2010):
+                    auctionId = i.select(".controls")[0]['data-id']
+                    marketId = i.select(".controls")[0]['data-marketid']
+                    gujia_more3.append((auctionId, marketId))
+                    temp_l.append(auctionId)
+                    print(brand,year)
 
         auctionIds = ''
         for i in gujia_more3:
