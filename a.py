@@ -213,25 +213,26 @@ def chujia(cookies, auctionId):
 
 
 def worker(cookies, select_city):
-    auctionIds = get_auctionId(select_city, cookies)
-    print("获取id成功！")
     chenggong = 0
     chongfu = 0
     shibai = 0
-    for i in auctionIds:
-        try:
-            a = chujia(cookies, i)
-            if(a['code'] == 200):
-                print(a['message']+i)
-                chenggong += 1
-            else:
-                print(a['message']+i)
+    for u in range(2):
+        auctionIds = get_auctionId(select_city, cookies)
+        print("获取id成功！")
+        for i in auctionIds:
+            try:
+                a = chujia(cookies, i)
+                if(a['code'] == 200):
+                    print(a['message']+i)
+                    chenggong += 1
+                else:
+                    print(a['message']+i)
+                    shibai += 1
+            except:
+                print("出价失败"+i)
                 shibai += 1
-        except:
-            print("出价失败"+i)
-            shibai += 1
-    print("=============完成=============")
-    print("成功%d个 失败%d个" % (chenggong, shibai))
+        print("=============完成=============")
+        print("成功%d个 失败%d个" % (chenggong, shibai))
     return "成功%d个 失败%d个" % (chenggong, shibai)
 
 
@@ -249,7 +250,6 @@ if __name__ == "__main__":
     # cookies=login(mobilePhone, pswd)
     # print("登录成功！")
     # worker(cookies,select_city)
-
     # print("          按回车退出")
     # input()
 
