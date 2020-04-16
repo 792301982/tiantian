@@ -219,23 +219,24 @@ def worker(cookies, select_city):
     chenggong = 0
     chongfu = 0
     shibai = 0
-    for u in range(2):
-        auctionIds = get_auctionId(select_city, cookies)
-        print("获取id成功！")
-        for i in auctionIds:
-            try:
-                a = chujia(cookies, i)
-                if(a['code'] == 200):
-                    print(a['message']+i)
-                    chenggong += 1
-                else:
-                    print(a['message']+i)
-                    shibai += 1
-            except:
-                print("出价失败"+i)
+    auctionIds1 = get_auctionId(select_city, cookies)
+    auctionIds2 = get_auctionId(select_city, cookies)
+    auctionIds=list(set(auctionIds1)+set(auctionIds2))
+    print("获取id成功！")
+    for i in auctionIds:
+        try:
+            a = chujia(cookies, i)
+            if(a['code'] == 200):
+                print(a['message']+i)
+                chenggong += 1
+            else:
+                print(a['message']+i)
                 shibai += 1
-        print("=============完成=============")
-        print("成功%d个 失败%d个" % (chenggong, shibai))
+        except:
+            print("出价失败"+i)
+            shibai += 1
+    print("=============完成=============")
+    print("成功%d个 失败%d个" % (chenggong, shibai))
     return "成功%d个 失败%d个" % (chenggong, shibai)
 
 
@@ -255,7 +256,6 @@ if __name__ == "__main__":
     # worker(cookies,select_city)
     # print("          按回车退出")
     # input()
-
     d = dict()
     while(1):
         with open("a.txt", "r+") as f:
