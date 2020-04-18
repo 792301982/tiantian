@@ -163,7 +163,7 @@ def get_auctionId(select_city, cookies):
         cityValues = '4,1760'
     else:
         cityValues = ''
-    for n in range(1, 1000):
+    for n in range(1, 50):
         print("获取id第%s页" % n)
         r = requests.post(cars_url, headers=headers, cookies=cookies, data={
             'status': 1,
