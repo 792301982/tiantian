@@ -221,7 +221,7 @@ def worker(cookies, select_city):
     shibai = 0
     auctionIds1 = get_auctionId(select_city, cookies)
     auctionIds2 = get_auctionId(select_city, cookies)
-    auctionIds=list(set(auctionIds1)+set(auctionIds2))
+    auctionIds=list(set(auctionIds1+auctionIds2))
     print("获取id成功！")
     for i in auctionIds:
         try:
@@ -256,6 +256,7 @@ if __name__ == "__main__":
     # worker(cookies,select_city)
     # print("          按回车退出")
     # input()
+
     d = dict()
     while(1):
         with open("a.txt", "r+") as f:
