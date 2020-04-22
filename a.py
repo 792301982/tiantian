@@ -189,12 +189,15 @@ def get_auctionId(select_city, cookies):
 
             if(spans[-7].text in ['骨架：5星', '骨架：4星', '骨架：3星'] and (brand in brands)):
                 try:
-                    if( (brand in ['大众','马自达','日产','奥迪','本田','宝马','奔驰','丰田'] and int(year) >=2008) or (brand in ['长安商用','长安轻型车','五菱汽车','金杯','吉利汽车','奇瑞','海马','力帆汽车','中华','众泰','长安'] and int(year) >=2013) or int(year)>=2010):
-                        auctionId = i.select(".controls")[0]['data-id']
-                        marketId = i.select(".controls")[0]['data-marketid']
-                        gujia_more3.append((auctionId, marketId))
-                        temp_l.append(auctionId)
-                        print(brand,year)
+                    if( (brand in ['大众','马自达','日产','奥迪','本田','宝马','奔驰','丰田'] and int(year) >=2008) or int(year)>=2010):
+                        if((brand in ['长安商用','长安轻型车','五菱汽车','金杯','吉利汽车','奇瑞','海马','力帆汽车','中华','众泰','长安'] and int(year) <2013)):
+                            pass
+                        else:
+                            auctionId = i.select(".controls")[0]['data-id']
+                            marketId = i.select(".controls")[0]['data-marketid']
+                            gujia_more3.append((auctionId, marketId))
+                            temp_l.append(auctionId)
+                            print(brand,year)
                 except:
                     continue
 
