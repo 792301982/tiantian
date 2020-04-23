@@ -163,7 +163,7 @@ def get_auctionId(select_city, cookies):
         cityValues = '4,1760'
     else:
         cityValues = ''
-    for n in range(1, 50):
+    for n in range(1, 1000):
         print("获取id第%s页" % n)
         r = requests.post(cars_url, headers=headers, cookies=cookies, data={
             'status': 1,
@@ -190,7 +190,7 @@ def get_auctionId(select_city, cookies):
             if(spans[-7].text in ['骨架：5星', '骨架：4星', '骨架：3星'] and (brand in brands)):
                 try:
                     if( (brand in ['大众','马自达','日产','奥迪','本田','宝马','奔驰','丰田'] and int(year) >=2008) or int(year)>=2010):
-                        if((brand in ['长安商用','长安轻型车','五菱汽车','金杯','吉利汽车','奇瑞','海马','力帆汽车','中华','众泰','长安'] and int(year) <2013)):
+                        if((brand in ['长安商用','长安轻型车','五菱汽车','金杯','吉利汽车','奇瑞','海马','力帆汽车','中华','众泰','长安','东风','比亚迪','江淮'] and int(year) <2013)):
                             pass
                         else:
                             auctionId = i.select(".controls")[0]['data-id']
@@ -250,30 +250,30 @@ def worker_time(mobilePhone, pswd, select_city):
 
 
 if __name__ == "__main__":
-    # mobilePhone = input("输入用户名：")
-    # pswd = input("输入密码：")
-    # select_city=input("选择（1.重庆、成都 2.全国）：")
+    mobilePhone = input("输入用户名：")
+    pswd = input("输入密码：")
+    select_city=input("选择（1.重庆、成都 2.全国）：")
 
-    # cookies=login(mobilePhone, pswd)
-    # print("登录成功！")
-    # worker(cookies,select_city)
-    # print("          按回车退出")
-    # input()
+    cookies=login(mobilePhone, pswd)
+    print("登录成功！")
+    worker(cookies,select_city)
+    print("          按回车退出")
+    input()
 
-    d = dict()
-    while(1):
-        with open("a.txt", "r+") as f:
-            l = f.read().split('\n')
-            for i in l:
-                if(i == ''):
-                    break
-                s = i.split(' ')
-                d[s[0]] = i
+    # d = dict()
+    # while(1):
+    #     with open("a.txt", "r+") as f:
+    #         l = f.read().split('\n')
+    #         for i in l:
+    #             if(i == ''):
+    #                 break
+    #             s = i.split(' ')
+    #             d[s[0]] = i
 
-        now_time = time.strftime("%H:%M", time.localtime())
-        print("正在运行…… %s" % now_time)
-        time.sleep(10)
-        for i in d:
-            s = d[i].split(' ')
-            if(s[4] == '1' and s[3] == now_time):
-                worker_time(s[0], s[1], s[2])
+    #     now_time = time.strftime("%H:%M", time.localtime())
+    #     print("正在运行…… %s" % now_time)
+    #     time.sleep(10)
+    #     for i in d:
+    #         s = d[i].split(' ')
+    #         if(s[4] == '1' and s[3] == now_time):
+    #             worker_time(s[0], s[1], s[2])
