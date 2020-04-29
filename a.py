@@ -122,9 +122,12 @@ def login(mobilePhone, pswd):
 
 
 def get_isbids(cookies, auctionIds):
-    r = requests.get(isbid_url, headers=headers, cookies=cookies,
+    try:
+        r = requests.get(isbid_url, headers=headers, cookies=cookies,
                      params={'auctionIds': auctionIds})
-    d = json.loads(r.text)
+        d = json.loads(r.text)
+    except:
+        return get_isbids(cookies, auctionIds)
     l = list()
     if d['result'] == None:
         return []
@@ -250,30 +253,30 @@ def worker_time(mobilePhone, pswd, select_city):
 
 
 if __name__ == "__main__":
-    mobilePhone = input("输入用户名：")
-    pswd = input("输入密码：")
-    select_city=input("选择（1.重庆、成都 2.全国）：")
+    # mobilePhone = input("输入用户名：")
+    # pswd = input("输入密码：")
+    # select_city=input("选择（1.重庆、成都 2.全国）：")
 
-    cookies=login(mobilePhone, pswd)
-    print("登录成功！")
-    worker(cookies,select_city)
-    print("          按回车退出")
-    input()
+    # cookies=login(mobilePhone, pswd)
+    # print("登录成功！")
+    # worker(cookies,select_city)
+    # print("          按回车退出")
+    # input()
 
-    # d = dict()
-    # while(1):
-    #     with open("a.txt", "r+") as f:
-    #         l = f.read().split('\n')
-    #         for i in l:
-    #             if(i == ''):
-    #                 break
-    #             s = i.split(' ')
-    #             d[s[0]] = i
+    d = dict()
+    while(1):
+        with open("a.txt", "r+") as f:
+            l = f.read().split('\n')
+            for i in l:
+                if(i == ''):
+                    break
+                s = i.split(' ')
+                d[s[0]] = i
 
-    #     now_time = time.strftime("%H:%M", time.localtime())
-    #     print("正在运行…… %s" % now_time)
-    #     time.sleep(10)
-    #     for i in d:
-    #         s = d[i].split(' ')
-    #         if(s[4] == '1' and s[3] == now_time):
-    #             worker_time(s[0], s[1], s[2])
+        now_time = time.strftime("%H:%M", time.localtime())
+        print("正在运行…… %s" % now_time)
+        time.sleep(10)
+        for i in d:
+            s = d[i].split(' ')
+            if(s[4] == '1' and s[3] == now_time):
+                worker_time(s[0], s[1], s[2])
