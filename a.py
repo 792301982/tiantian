@@ -5,7 +5,7 @@ import urllib.request
 import js2py
 import time
 import sys
-
+import traceback
 
 def Beijing_time():
     r = requests.get('https://www.baidu.com')
@@ -231,6 +231,7 @@ def worker(cookies, select_city):
     print("获取id成功！")
     for i in auctionIds:
         try:
+            1/0
             a = chujia(cookies, i)
             if(a['code'] == 200):
                 print(a['message']+i)
@@ -240,6 +241,9 @@ def worker(cookies, select_city):
                 shibai += 1
         except:
             print("出价失败"+i)
+            with open ("error.txt","a+") as f:
+                f.write("%s %s %s"%(time.asctime(time.localtime(time.time())),traceback.format_exc(),'\n'))
+            
             shibai += 1
     print("=============完成=============")
     print("成功%d个 失败%d个" % (chenggong, shibai))
