@@ -225,9 +225,9 @@ def worker(cookies, select_city):
     chenggong = 0
     chongfu = 0
     shibai = 0
-    auctionIds1 = get_auctionId(select_city, cookies)
-    auctionIds2 = get_auctionId(select_city, cookies)
-    auctionIds=list(set(auctionIds1+auctionIds2))
+    auctionIds = get_auctionId(select_city, cookies)
+    #auctionIds2 = get_auctionId(select_city, cookies)
+    #auctionIds=list(set(auctionIds1+auctionIds2))
     print("获取id成功！")
     for i in auctionIds:
         try:
@@ -243,7 +243,6 @@ def worker(cookies, select_city):
             print("出价失败"+i)
             with open ("error.txt","a+") as f:
                 f.write("%s %s %s"%(time.asctime(time.localtime(time.time())),traceback.format_exc(),'\n'))
-            
             shibai += 1
     print("=============完成=============")
     print("成功%d个 失败%d个" % (chenggong, shibai))
@@ -283,4 +282,5 @@ if __name__ == "__main__":
         for i in d:
             s = d[i].split(' ')
             if(s[4] == '1' and s[3] == now_time):
+                worker_time(s[0], s[1], s[2])
                 worker_time(s[0], s[1], s[2])
